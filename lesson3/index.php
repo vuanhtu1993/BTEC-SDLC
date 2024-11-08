@@ -50,6 +50,10 @@ foreach($students as $key => $sv) {
     echo $key."-".$sv["name"].$sv['age']."<br>";
 }
 
+function printStudents() {
+    
+}
+
 // foreach ($student as $key => $value) {
 //     echo $key . ' - ' . $value . PHP_EOL;
 // }
