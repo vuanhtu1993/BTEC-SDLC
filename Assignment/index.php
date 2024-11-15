@@ -1,18 +1,28 @@
 <?php
+// Kết nối CSDL
+require_once("./models/connectDB.php");
+
+$sql = "select * from products";
+$statement = $conn->query($sql);
+$products = $statement->fetchAll();
+
+echo "<pre>";
+print_r($products);
+
 // Dữ liệu
-$products = [
-    "sp1" => [
-        "name" => "Sản phẩm 1",
-        "price" => 100000,
-        "quantity" => 5
-    ],
-    "sp2" => [
-        "name" => "Sản phẩm 2",
-        "price" => 200000,
-        "quantity" => 3
-    ]
-];
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+// $products = [
+//     "sp1" => [
+//         "name" => "Sản phẩm 1",
+//         "price" => 100000,
+//         "quantity" => 5
+//     ],
+//     "sp2" => [
+//         "name" => "Sản phẩm 2",
+//         "price" => 200000,
+//         "quantity" => 3
+//     ]
+// ];
+if (isset($_POST['addProduct'])) {
     // echo "Form duoc kich hoat";
     // print_r($_POST['productID']);
     // Luu du lieu => Them san pham vao trong mang
@@ -84,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <input type="text" class="form-control" name="quantity">
                 </div>
 
-                <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
+                <button type="submit" name="addProduct" class="btn btn-primary">Thêm sản phẩm</button>
             </form>
         </div>
         <div class="col-6">
