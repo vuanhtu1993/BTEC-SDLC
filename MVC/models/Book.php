@@ -1,56 +1,46 @@
 <?php
-
-class Book extends BaseModel
+require_once 'ConnectDatabase.php';
+class Book
 {
-    protected $table = 'books';
-
-    public function getAll()
+    public $connect;
+    public function __construct()
     {
-        $sql = "
-            SELECT 
-                b.id                b_id,
-                b.title             b_title,
-                b.author            b_author,
-                b.img_cover         b_img_cover,
-                b.published_year    b_published_year,
-                b.created_at        b_created_at,
-                b.updated_at        b_updated_at,
-                c.id                c_id,
-                c.name              c_name
-            FROM books b
-            JOIN categories c ON c.id = b.category_id
-            ORDER BY b.id DESC
-        ";
-
-        $stmt = $this->pdo->prepare($sql);
-
-        $stmt->execute();
-
-        return $stmt->fetchAll();
+        $this->connect = new ConnectDatabase();
     }
-
-    public function getByID($id)
+    // Hiển thị -> Lấy ra toàn bộ dữ liệu
+    public function getAllBook()
     {
-        $sql = "
-            SELECT 
-                b.id                b_id,
-                b.title             b_title,
-                b.author            b_author,
-                b.img_cover         b_img_cover,
-                b.published_year    b_published_year,
-                b.created_at        b_created_at,
-                b.updated_at        b_updated_at,
-                c.id                c_id,
-                c.name              c_name
-            FROM books b
-            JOIN categories c ON c.id = b.category_id
-            WHERE b.id = :id;
-        ";
-
-        $stmt = $this->pdo->prepare($sql);
-
-        $stmt->execute(['id' => $id]);
-
-        return $stmt->fetch();
+        $sql = "SELECT * FROM `books`";
+        $this->connect->setQuery($sql);
+        return $this->connect->loadData();
+    }
+    // Thêm -> Câu insert into
+    public function insertBook($id, $title, $cover_image, $author, $publisher, $publish_year)
+    {
+        $sql = "INSERT INTO `books` VALUES (?,?,?,?,?,?)";
+        $this->connect->setQuery($sql);
+        return $this->connect->loadData([$id, $title, $cover_image, $author, $publisher, $publish_year]);
+    }
+    // Sửa -> có 2 câu SQL
+    //    Lấy thông tin theo id
+    public function getIdBook($id)
+    {
+        $sql = "SELECT * FROM `books` WHERE id = ?";
+        $this->connect->setQuery($sql);
+        return $this->connect->loadData([$id], false);
+    }
+    //    Câu update
+    public function updateBook($title, $cover_image, $author, $publisher, $publish_year, $id)
+    {
+        $sql = "UPDATE `books` SET `title`= ?,`cover_image`= ?,`author`= ?,`publisher`= ?,`publish_year`= ? WHERE `id`= ?";
+        $this->connect->setQuery($sql);
+        return $this->connect->loadData([$title, $cover_image, $author, $publisher, $publish_year, $id], false);
+    }
+    //  Xóa
+    public function deleteBook($id)
+    {
+        $sql = "DELETE FROM `books` WHERE id = ?";
+        $this->connect->setQuery($sql);
+        return $this->connect->loadData([$id], false);
     }
 }

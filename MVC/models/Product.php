@@ -1,16 +1,28 @@
 <?php
 
-class Product extends BaseModel
+require_once "ConnectDatabase.php";
+
+
+class Product
 {
-    protected $table = 'products';
+    public $connect;
 
-    public function getTop3Latest() {
-        $sql = "SELECT * FROM {$this->table} ORDER BY id DESC LIMIT 3";
+    public function __construct()
+    {
+        $this->connect = new ConnectDatabase();
+    }
 
-        $stmt = $this->pdo->prepare($sql);
+    public function getAllProduct()
+    {
+        $sql = "SELECT * FROM `products`";
+        $this->connect->setQuery($sql);
+        return $this->connect->loadData();
+    }
 
-        $stmt->execute();
-
-        return $stmt->fetchAll();
+    public function insertProduct($name, $price, $description, $quantity, $category = 1)
+    {
+        $sql = "INSERT INTO `products` (name, price, description, quantity) VALUES (?,?,?,?)";
+        $this->connect->setQuery($sql);
+        return $this->connect->loadData([$name, $price, $description, $quantity]);
     }
 }
